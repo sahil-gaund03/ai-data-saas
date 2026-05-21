@@ -110,8 +110,19 @@ def df_to_csv_bytes(df: pd.DataFrame) -> bytes:
 
 def df_to_excel_bytes(df: pd.DataFrame) -> bytes:
     buf = io.BytesIO()
+    df_clean = df.copy()
+    
+    # Regex matching illegal XML characters (ASCII 0-31 except tab 9, newline 10, carriage return 13)
+    illegal_xml_re = re.compile(r'[\x00-\x08\x0B\x0C\x0E-\x1F]')
+    
+    # Sanitize object and string columns cleanly without corrupting null/NaN values
+    for col in df_clean.select_dtypes(include=['object', 'string']).columns:
+        df_clean[col] = df_clean[col].apply(
+            lambda x: illegal_xml_re.sub('', str(x)) if pd.notnull(x) else x
+        )
+        
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
-        df.to_excel(writer, index=False)
+        df_clean.to_excel(writer, index=False)
     buf.seek(0)
     return buf.read()
 
