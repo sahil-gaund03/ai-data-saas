@@ -29,7 +29,11 @@ def render_insights_page() -> None:
         "Gemini-powered business insights from your dataset schema and statistics.",
     )
 
-    df = st.session_state.get("df_cleaned") or st.session_state.get("df_raw")
+    # Explicitly check for None to avoid Pandas ambiguous truth value evaluation
+    df = st.session_state.get("df_cleaned")
+    if df is None:
+        df = st.session_state.get("df_raw")
+
     if df is None:
         st.info("⬆️ Upload a dataset first.")
         return
