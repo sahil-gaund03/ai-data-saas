@@ -72,6 +72,18 @@ def _call_gemini(prompt: str) -> str:
         return response.text.strip()
     except Exception as exc:
         logger.warning("Gemini call failed: %s", exc)
+        err_msg = str(exc)
+        
+        # Elegant intercept for quota boundaries and rate limit exhaustion limits
+        if "429" in err_msg or "quota" in err_msg.lower():
+            return (
+                "⚠️ **Gemini API Quota Exceeded (Error 429)**\n\n"
+                "The platform has reached the daily limit for the Google AI Studio Free Tier.\n\n"
+                "**How to resolve this:**\n"
+                "1. **Wait a minute** and try your request again.\n"
+                "2. **Switch your API Key** in your Secrets config to an alternate project token.\n"
+                "3. **Enable Billing** on your Google AI Studio account to lift production volume constraints."
+            )
         return f"__LLM_ERROR__: {exc}"
 
 
