@@ -76,11 +76,7 @@ def memory_usage(df: pd.DataFrame) -> int:
 # ── Data quality score ───────────────────────────────────────────────────────
 
 def data_quality_score(df: pd.DataFrame) -> float:
-    """
-    Return a quality score 0–100 based on:
-      • % complete values (no nulls)
-      • % duplicate rows
-    """
+    """Return a quality score 0–100 based on completeness and uniqueness."""
     total_cells = df.shape[0] * df.shape[1]
     if total_cells == 0:
         return 0.0
@@ -111,287 +107,257 @@ def df_to_csv_bytes(df: pd.DataFrame) -> bytes:
 def df_to_excel_bytes(df: pd.DataFrame) -> bytes:
     buf = io.BytesIO()
     df_clean = df.copy()
-    
-    # Regex matching illegal XML characters (ASCII 0-31 except tab 9, newline 10, carriage return 13)
     illegal_xml_re = re.compile(r'[\x00-\x08\x0B\x0C\x0E-\x1F]')
-    
-    # Sanitize object and string columns cleanly without corrupting null/NaN values
     for col in df_clean.select_dtypes(include=['object', 'string']).columns:
         df_clean[col] = df_clean[col].apply(
             lambda x: illegal_xml_re.sub('', str(x)) if pd.notnull(x) else x
         )
-        
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
         df_clean.to_excel(writer, index=False)
     buf.seek(0)
     return buf.read()
 
 
-# ── Streamlit CSS injection ───────────────────────────────────────────────────
+# ── Streamlit Master CSS Injection ───────────────────────────────────────────
 
 def inject_global_css() -> None:
-    """
-    Inject the premium glassmorphism CSS that matches the DESIGN.md spec.
-    Called once at app startup.
-    """
+    """Inject premium SaaS dark glassmorphism design tokens."""
     st.markdown("""
 <style>
-/* ── Google Fonts ───────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* ── CSS Tokens ─────────────────────────────────────────────── */
 :root {
     --surface:          #13121b;
-    --surface-low:      #1b1b24;
+    --surface-low:      #171622;
     --surface-mid:      #1f1f28;
-    --surface-high:     #2a2933;
-    --surface-highest:  #35343e;
+    --surface-high:     #262536;
     --on-surface:       #e4e1ee;
     --on-surface-var:   #c7c4d8;
     --primary:          #c4c0ff;
-    --primary-dim:      #8781ff;
+    --primary-gradient: linear-gradient(135deg, #c4c0ff 0%, #a29bfe 100%);
     --secondary:        #d0bcff;
     --tertiary:         #ffb785;
-    --outline:          #918fa1;
-    --outline-var:      #464555;
+    --outline:          #79778a;
+    --outline-var:      #383747;
     --error:            #ffb4ab;
     --success:          #6ee7b7;
-    --glass-bg:         rgba(31, 31, 40, 0.75);
+    --glass-card:       rgba(31, 31, 40, 0.45);
     --glass-border:     rgba(196, 192, 255, 0.08);
-    --glow-primary:     rgba(196, 192, 255, 0.12);
 }
 
-/* ── Base overrides ─────────────────────────────────────────── */
+/* ── Base App Architecture ─────────────────────────────────── */
 html, body, [class*="css"] {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     background-color: var(--surface) !important;
     color: var(--on-surface) !important;
 }
 
-/* Hide Streamlit chrome */
-#MainMenu, footer, header { visibility: hidden; }
-.stDeployButton { display: none; }
+#MainMenu, footer, header { visibility: hidden !important; }
+.stDeployButton { display: none !important; }
 
-/* ── Sidebar ────────────────────────────────────────────────── */
+/* Remove block padding spaces */
+.block-container {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 94% !important;
+}
+
+/* ── Premium Sidebar Navigation Overhaul ────────────────────── */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #16151f 0%, #111016 100%) !important;
+    background: linear-gradient(180deg, #0e0d14 0%, #13121b 100%) !important;
     border-right: 1px solid var(--glass-border) !important;
+    width: 320px !important;
+}
+
+/* Redesign Radio Navigation Options into SaaS App Menus */
+section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] {
+    gap: 6px !important;
 }
 section[data-testid="stSidebar"] .stRadio label {
+    background: transparent !important;
     color: var(--on-surface-var) !important;
     font-size: 14px !important;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: all .2s ease;
+    font-weight: 500 !important;
+    padding: 10px 14px !important;
+    border-radius: 10px !important;
+    border: 1px solid transparent !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
 }
 section[data-testid="stSidebar"] .stRadio label:hover {
+    color: #ffffff !important;
+    background: rgba(196, 192, 255, 0.04) !important;
+    border-color: rgba(196, 192, 255, 0.08) !important;
+}
+section[data-testid="stSidebar"] .stRadio [data-checked="true"] label {
+    color: #ffffff !important;
+    background: linear-gradient(90deg, rgba(196, 192, 255, 0.12) 0%, rgba(208, 188, 255, 0.03) 100%) !important;
+    border-color: rgba(196, 192, 255, 0.25) !important;
+    box-shadow: inset 0 0 12px rgba(196, 192, 255, 0.05) !important;
+    font-weight: 600 !important;
+}
+section[data-testid="stSidebar"] .stRadio input[type="radio"] { display: none !important; }
+
+/* ── Native Streamlit Component Re-Skinning ───────────────── */
+
+/* 1. Transform Native st.tabs into Segmented Control Toggles */
+div[data-testid="stTabBar"] {
+    background: #191822 !important;
+    padding: 6px !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--outline-var) !important;
+    margin-bottom: 24px !important;
+    gap: 4px !important;
+}
+div[data-testid="stTabBar"] button {
+    background: transparent !important;
+    color: var(--on-surface-var) !important;
+    border: none !important;
+    padding: 8px 18px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+div[data-testid="stTabBar"] button:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+div[data-testid="stTabBar"] button[aria-selected="true"] {
+    background: var(--surface-high) !important;
     color: var(--primary) !important;
-    background: rgba(196, 192, 255, 0.05);
+    border: 1px solid rgba(196, 192, 255, 0.15) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+div[data-testid="stTabBorder"] { display: none !important; }
+
+/* 2. Premium Expanders with Border Glows */
+div[data-testid="stExpander"] {
+    background: var(--glass-card) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+    margin-bottom: 1rem !important;
+}
+div[data-testid="stExpander"]:hover {
+    border-color: rgba(196, 192, 255, 0.2) !important;
 }
 
-/* ── Glass card container ───────────────────────────────────── */
+/* 3. Form Input Elements & Selectboxes */
+.stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div input {
+    background: #181720 !important;
+    border: 1px solid var(--outline-var) !important;
+    border-radius: 10px !important;
+    color: var(--on-surface) !important;
+    font-size: 14px !important;
+    height: 42px !important;
+    transition: all 0.2s ease !important;
+}
+.stSelectbox > div > div:hover, .stMultiSelect > div > div:hover {
+    border-color: rgba(196, 192, 255, 0.3) !important;
+}
+
+/* 4. Action Buttons Elevation */
+.stButton > button {
+    background: var(--primary-gradient) !important;
+    color: #0f0e15 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    height: 42px !important;
+    font-size: 14px !important;
+    letter-spacing: -0.01em;
+    box-shadow: 0 4px 15px rgba(196, 192, 255, 0.15) !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.stButton > button:hover {
+    box-shadow: 0 6px 22px rgba(196, 192, 255, 0.3) !important;
+    transform: translateY(-1.5px);
+    color: #0f0e15 !important;
+}
+
+/* ── Modern Design System Layout Cards ─────────────────────── */
 .glass-card {
-    background: linear-gradient(145deg, rgba(31, 31, 40, 0.8), rgba(22, 21, 31, 0.85));
+    background: var(--glass-card);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(196, 192, 255, 0.12);
-    border-radius: 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
     padding: 1.75rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    transition: border-color .3s, box-shadow .3s, transform .2s;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
 }
 .glass-card:hover {
-    border-color: rgba(196, 192, 255, 0.3);
-    box-shadow: 0 12px 40px var(--glow-primary);
-    transform: translateY(-2px);
+    border-color: rgba(196, 192, 255, 0.25);
+    box-shadow: 0 12px 40px rgba(196, 192, 255, 0.08);
 }
 
-/* ── KPI metric widget ──────────────────────────────────────── */
 .kpi-card {
-    background: linear-gradient(145deg, #1f1f28, #16151f) !important;
-    border: 1px solid rgba(196, 192, 255, 0.15) !important;
-    border-radius: 14px !important;
+    background: linear-gradient(145deg, #181721 0%, #121118 100%) !important;
+    border: 1px solid rgba(196, 192, 255, 0.12) !important;
+    border-radius: 16px !important;
     padding: 24px !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
-    text-align: left;
-    transition: transform 0.2s ease, border-color 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.25s ease;
 }
 .kpi-card:hover { 
-    border-color: rgba(196, 192, 255, 0.35) !important;
+    border-color: rgba(196, 192, 255, 0.3) !important;
     transform: translateY(-2px);
 }
 .kpi-value { 
-    font-size: 2.2rem; 
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.4rem; 
     font-weight: 700; 
-    letter-spacing: -0.03em; 
-    color: var(--primary); 
-    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em; 
+    color: var(--primary);
 }
 .kpi-label { 
-    font-size: 0.8rem; 
+    font-size: 0.75rem; 
     color: var(--outline); 
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase; 
-    letter-spacing: 0.5px; 
-    margin-top: 6px; 
-}
-.kpi-delta { font-size: 0.85rem; margin-top: 6px; font-weight: 500; }
-
-/* ── Section header ─────────────────────────────────────────── */
-.section-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--tertiary);
-    text-transform: uppercase;
-    background: rgba(255, 183, 133, 0.08);
-    padding: 4px 10px;
-    border-radius: 4px;
-    display: inline-block;
-    margin-bottom: 0.75rem;
+    letter-spacing: 1px; 
+    margin-top: 4px; 
 }
 
-/* ── Page title ─────────────────────────────────────────────── */
-.page-title {
-    font-size: 2.6rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: #ffffff;
-    line-height: 1.1;
-    margin-top: 4px;
-}
-.gradient-text {
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* ── Status chip ────────────────────────────────────────────── */
-.chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin: 4px;
-}
-.chip-primary   { background: rgba(196,192,255,.12) !important; color: var(--primary) !important; border: 1px solid rgba(196,192,255,.25); }
-.chip-success   { background: rgba(110,231,183,.12) !important; color: var(--success) !important; border: 1px solid rgba(110,231,183,.25); }
-.chip-warning   { background: rgba(255,183,133,.12) !important; color: var(--tertiary) !important; border: 1px solid rgba(255,183,133,.25); }
-.chip-error     { background: rgba(255,180,171,.12) !important; color: var(--error) !important; border: 1px solid rgba(255,180,171,.25); }
-
-/* ── AI response container ──────────────────────────────────── */
+/* ── Premium AI Interactive Enclosures ─────────────────────── */
 .ai-response {
-    background: linear-gradient(135deg, rgba(31, 31, 40, 0.7) 0%, rgba(19, 18, 27, 0.9) 100%) !important;
+    background: linear-gradient(150deg, rgba(31, 31, 40, 0.6) 0%, rgba(15, 14, 21, 0.85) 100%) !important;
     border-left: 4px solid var(--primary) !important;
-    border-top: 1px solid rgba(196, 192, 255, 0.1);
-    border-right: 1px solid rgba(196, 192, 255, 0.1);
-    border-bottom: 1px solid rgba(196, 192, 255, 0.1);
-    border-radius: 0 12px 12px 0;
-    padding: 22px !important;
-    margin: 18px 0 !important;
-    color: var(--on-surface) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important;
-    line-height: 1.7;
+    border-radius: 4px 16px 16px 4px;
+    padding: 24px !important;
+    margin: 20px 0 !important;
+    border-top: 1px solid var(--glass-border);
+    border-right: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3) !important;
 }
 .ai-badge {
     font-family: 'JetBrains Mono', monospace;
     display: inline-block;
-    background: rgba(196, 192, 255, 0.15) !important;
+    background: rgba(196, 192, 255, 0.14) !important;
     color: var(--primary) !important;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 4px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-    border: 1px solid rgba(196, 192, 255, 0.2);
+    border-radius: 6px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(196, 192, 255, 0.15);
 }
 
-/* ── Upload zone ────────────────────────────────────────────── */
 .upload-zone {
-    border: 2px dashed rgba(196, 192, 255, 0.2) !important;
+    border: 2px dashed rgba(196, 192, 255, 0.15) !important;
     border-radius: 16px;
-    padding: 3.5rem 2rem;
-    text-align: center;
-    background: #1b1b24;
-    transition: border-color .3s, background .3s;
+    padding: 4rem 2rem;
+    background: #16151e;
+    transition: all 0.3s ease;
 }
 .upload-zone:hover {
     border-color: var(--primary) !important;
-    background: rgba(196, 192, 255, .03);
-}
-
-/* ── Chat bubbles ───────────────────────────────────────────── */
-.chat-user {
-    background: rgba(196, 192, 255, .1) !important;
-    border: 1px solid rgba(196, 192, 255, .15) !important;
-    border-radius: 12px 12px 4px 12px !important;
-    padding: 1rem 1.25rem !important;
-    margin-left: 3rem;
-    font-size: 0.95rem;
-    color: #ffffff !important;
-}
-.chat-ai {
-    background: rgba(27, 27, 36, 0.85) !important;
-    border: 1px solid var(--glass-border) !important;
-    border-radius: 12px 12px 12px 4px !important;
-    padding: 1rem 1.25rem !important;
-    margin-right: 3rem;
-    font-size: 0.95rem;
-    border-left: 3px solid var(--primary) !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-
-/* ── Scrollbar ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--surface); }
-::-webkit-scrollbar-thumb { background: var(--outline-var); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--outline); }
-
-/* ── Streamlit widget overrides ─────────────────────────────── */
-.stSelectbox > div > div,
-.stMultiSelect > div > div,
-.stTextInput > div > div input {
-    background: var(--surface-mid) !important;
-    border: 1px solid rgba(196, 192, 255, 0.15) !important;
-    border-radius: 8px !important;
-    color: var(--on-surface) !important;
-    padding: 2px 4px;
-}
-.stSelectbox > div > div:hover, .stMultiSelect > div > div:hover {
-    border-color: var(--primary) !important;
-}
-.stButton > button {
-    background: linear-gradient(135deg, #1f1f28 0%, #13121b 100%) !important;
-    color: var(--on-surface) !important;
-    border: 1px solid rgba(196, 192, 255, 0.3) !important;
-    border-radius: 8px !important;
-    padding: 0.6rem 1.5rem !important;
-    font-weight: 600 !important;
-    transition: all 0.25s ease !important;
-}
-.stButton > button:hover {
-    border-color: var(--primary) !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 16px rgba(196, 192, 255, 0.2) !important;
-    transform: translateY(-1px);
-}
-.stDataFrame { border-radius: 10px; overflow: hidden; border: 1px solid var(--glass-border); }
-div[data-testid="stMetricValue"] { color: var(--primary) !important; font-weight: 700; }
-div[data-testid="stExpander"] {
-    background-color: #1f1f28 !important;
-    border: 1px solid rgba(196, 192, 255, 0.1) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    background: rgba(196, 192, 255, .01);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -416,12 +382,12 @@ def kpi_card(label: str, value: str, delta: str = "", colour: str = "") -> str:
 
 def section_header(label: str, title: str, subtitle: str = "") -> None:
     """Render a consistent premium page-section header structure."""
-    subtitle_html = f'<p style="color:var(--on-surface-var); font-size:1.05rem; margin-top:0.5rem; line-height:1.5;">{subtitle}</p>' if subtitle else ""
+    subtitle_html = f'<p style="color:var(--on-surface-var); font-size:1.02rem; margin-top:0.4rem; line-height:1.5;">{subtitle}</p>' if subtitle else ""
     st.markdown(f"""
-<div style="margin-bottom: 2rem; mt: 0.5rem;">
+<div style="margin-bottom: 2.2rem;">
     <div class="section-label">{label}</div>
-    <div class="page-title">{title}</div>
+    <div class="page-title" style="font-family: 'Space Grotesk', sans-serif;">{title}</div>
     {subtitle_html}
 </div>
-<hr style="border-color: rgba(196, 192, 255, 0.12); margin-bottom: 2rem; margin-top: 1.5rem;">
+<hr style="border-color: rgba(196, 192, 255, 0.1); margin-bottom: 2.5rem; margin-top: 1.5rem;">
 """, unsafe_allow_html=True)
