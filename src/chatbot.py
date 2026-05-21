@@ -155,7 +155,11 @@ def render_chat_page() -> None:
         "Ask anything about your data in plain English. Powered by Gemini + Pandas.",
     )
 
-    df = st.session_state.get("df_cleaned") or st.session_state.get("df_raw")
+    # Explicitly check for None to prevent ambiguous DataFrame truth value evaluation
+    df = st.session_state.get("df_cleaned")
+    if df is None:
+        df = st.session_state.get("df_raw")
+
     if df is None:
         st.info("⬆️ Upload a dataset first.")
         return

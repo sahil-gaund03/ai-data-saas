@@ -255,7 +255,11 @@ def render_automl_page() -> None:
         "Auto-detect task type, compare models, and get AI-powered recommendations.",
     )
 
-    df = st.session_state.get("df_cleaned") or st.session_state.get("df_raw")
+   # Explicitly check for None to prevent ambiguous DataFrame truth value evaluation
+    df = st.session_state.get("df_cleaned")
+    if df is None:
+        df = st.session_state.get("df_raw")
+
     if df is None:
         st.info("⬆️ Upload a dataset first.")
         return
