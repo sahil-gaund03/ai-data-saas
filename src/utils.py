@@ -121,7 +121,7 @@ def df_to_excel_bytes(df: pd.DataFrame) -> bytes:
 # ── Streamlit Master CSS Injection ───────────────────────────────────────────
 
 def inject_global_css() -> None:
-    """Inject premium SaaS dark glassmorphism design tokens."""
+    """Inject premium SaaS dark glassmorphism design tokens into Streamlit."""
     st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -145,17 +145,26 @@ def inject_global_css() -> None:
     --glass-border:     rgba(196, 192, 255, 0.08);
 }
 
-/* ── Base App Architecture ─────────────────────────────────── */
+/* ── Smooth Cinematic Entrance Animations ──────────────────── */
+@keyframes saasEntrance {
+    from { opacity: 0; transform: translateY(6px); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
 html, body, [class*="css"] {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     background-color: var(--surface) !important;
     color: var(--on-surface) !important;
 }
 
+/* Bind global subtle viewport entry transition */
+div[data-testid="stVerticalBlock"] > div {
+    animation: saasEntrance 0.35s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards;
+}
+
 #MainMenu, footer, header { visibility: hidden !important; }
 .stDeployButton { display: none !important; }
 
-/* Remove block padding spaces */
 .block-container {
     padding-top: 3.5rem !important;
     padding-bottom: 3rem !important;
@@ -169,10 +178,7 @@ section[data-testid="stSidebar"] {
     width: 320px !important;
 }
 
-/* Redesign Radio Navigation Options into SaaS App Menus */
-section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] {
-    gap: 6px !important;
-}
+section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] { gap: 6px !important; }
 section[data-testid="stSidebar"] .stRadio label {
     background: transparent !important;
     color: var(--on-surface-var) !important;
@@ -182,7 +188,6 @@ section[data-testid="stSidebar"] .stRadio label {
     border-radius: 10px !important;
     border: 1px solid transparent !important;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    cursor: pointer !important;
 }
 section[data-testid="stSidebar"] .stRadio label:hover {
     color: #ffffff !important;
@@ -198,12 +203,10 @@ section[data-testid="stSidebar"] .stRadio [data-checked="true"] label {
 }
 section[data-testid="stSidebar"] .stRadio input[type="radio"] { display: none !important; }
 
-/* ── Native Streamlit Component Re-Skinning ───────────────── */
-
-/* 1. Transform Native st.tabs into Segmented Control Toggles */
+/* ── Segmented Control Tabs Overhaul ──────────────────────── */
 div[data-testid="stTabBar"] {
-    background: #191822 !important;
-    padding: 6px !important;
+    background: #16151f !important;
+    padding: 5px !important;
     border-radius: 12px !important;
     border: 1px solid var(--outline-var) !important;
     margin-bottom: 24px !important;
@@ -231,53 +234,37 @@ div[data-testid="stTabBar"] button[aria-selected="true"] {
 }
 div[data-testid="stTabBorder"] { display: none !important; }
 
-/* 2. Premium Expanders with Border Glows */
-div[data-testid="stExpander"] {
-    background: var(--glass-card) !important;
-    backdrop-filter: blur(12px) !important;
-    border: 1px solid var(--glass-border) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
-    margin-bottom: 1rem !important;
-}
-div[data-testid="stExpander"]:hover {
-    border-color: rgba(196, 192, 255, 0.2) !important;
-}
-
-/* 3. Form Input Elements & Selectboxes */
+/* ── Input Components ──────────────────────────────────────── */
 .stSelectbox > div > div, .stMultiSelect > div > div, .stTextInput > div > div input {
-    background: #181720 !important;
+    background: #16151e !important;
     border: 1px solid var(--outline-var) !important;
     border-radius: 10px !important;
     color: var(--on-surface) !important;
     font-size: 14px !important;
-    height: 42px !important;
     transition: all 0.2s ease !important;
 }
 .stSelectbox > div > div:hover, .stMultiSelect > div > div:hover {
-    border-color: rgba(196, 192, 255, 0.3) !important;
+    border-color: rgba(196, 192, 255, 0.25) !important;
 }
 
-/* 4. Action Buttons Elevation */
+/* ── Action Control Buttons ────────────────────────────────── */
 .stButton > button {
     background: var(--primary-gradient) !important;
     color: #0f0e15 !important;
     border: none !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
-    height: 42px !important;
     font-size: 14px !important;
-    letter-spacing: -0.01em;
-    box-shadow: 0 4px 15px rgba(196, 192, 255, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(196, 192, 255, 0.12) !important;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 .stButton > button:hover {
-    box-shadow: 0 6px 22px rgba(196, 192, 255, 0.3) !important;
-    transform: translateY(-1.5px);
+    box-shadow: 0 6px 22px rgba(196, 192, 255, 0.25) !important;
+    transform: translateY(-1px);
     color: #0f0e15 !important;
 }
 
-/* ── Modern Design System Layout Cards ─────────────────────── */
+/* ── Premium Layout Containers ──────────────────────────────── */
 .glass-card {
     background: var(--glass-card);
     backdrop-filter: blur(20px);
@@ -286,11 +273,6 @@ div[data-testid="stExpander"]:hover {
     border-radius: 16px;
     padding: 1.75rem;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-    transition: all 0.3s ease;
-}
-.glass-card:hover {
-    border-color: rgba(196, 192, 255, 0.25);
-    box-shadow: 0 12px 40px rgba(196, 192, 255, 0.08);
 }
 
 .kpi-card {
@@ -299,17 +281,12 @@ div[data-testid="stExpander"]:hover {
     border-radius: 16px !important;
     padding: 24px !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
-    transition: all 0.25s ease;
 }
-.kpi-card:hover { 
-    border-color: rgba(196, 192, 255, 0.3) !important;
-    transform: translateY(-2px);
-}
+
 .kpi-value { 
     font-family: 'Space Grotesk', sans-serif;
     font-size: 2.4rem; 
     font-weight: 700; 
-    letter-spacing: -0.02em; 
     color: var(--primary);
 }
 .kpi-label { 
@@ -320,6 +297,24 @@ div[data-testid="stExpander"]:hover {
     letter-spacing: 1px; 
     margin-top: 4px; 
 }
+
+/* ── Custom High-End SaaS Alert Callouts ────────────────────── */
+.saas-callout {
+    padding: 16px 20px !important;
+    border-radius: 12px !important;
+    margin: 16px 0 !important;
+    border: 1px solid transparent !important;
+    font-size: 0.92rem !important;
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+.saas-callout-info { background: rgba(196,192,255,0.05) !important; border-color: rgba(196,192,255,0.15) !important; color: #c4c0ff !important; }
+.saas-callout-success { background: rgba(110,231,183,0.05) !important; border-color: rgba(110,231,183,0.15) !important; color: #6ee7b7 !important; }
+.saas-callout-warning { background: rgba(255,183,133,0.05) !important; border-color: rgba(255,183,133,0.15) !important; color: #ffb785 !important; }
+.saas-callout-error { background: rgba(255,180,171,0.05) !important; border-color: rgba(255,180,171,0.15) !important; color: #ffb4ab !important; }
 
 /* ── Premium AI Interactive Enclosures ─────────────────────── */
 .ai-response {
@@ -347,20 +342,53 @@ div[data-testid="stExpander"]:hover {
     margin-bottom: 14px;
     border: 1px solid rgba(196, 192, 255, 0.15);
 }
-
-.upload-zone {
-    border: 2px dashed rgba(196, 192, 255, 0.15) !important;
-    border-radius: 16px;
-    padding: 4rem 2rem;
-    background: #16151e;
-    transition: all 0.3s ease;
-}
-.upload-zone:hover {
-    border-color: var(--primary) !important;
-    background: rgba(196, 192, 255, .01);
-}
 </style>
 """, unsafe_allow_html=True)
+
+
+# ── SaaS UI Premium Micro-Components ──────────────────────────────────────────
+
+def saas_callout(message: str, type: str = "info") -> None:
+    """Renders a beautiful custom glassmorphic alert banner instead of basic stock banners."""
+    icons = {"info": "🔮", "success": "✅", "warning": "⚠️", "error": "🚨"}
+    st.markdown(
+        f'<div class="saas-callout saas-callout-{type}">'
+        f'<span>{icons.get(type, "🔮")}</span>'
+        f'<span>{message}</span>'
+        f'</div>', 
+        unsafe_allow_html=True
+    )
+
+
+def style_plotly_chart(fig) -> None:
+    """
+    Globally styles any Plotly figure to perfectly match the design tokens of the application.
+    Removes black grid lines, applies correct typography, and enables smooth antialiasing profiles.
+    """
+    fig.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Plus Jakarta Sans, sans-serif", color="#e4e1ee"),
+        xaxis=dict(
+            gridcolor="#262536",
+            zerolinecolor="#383747",
+            showline=True,
+            linecolor="#383747"
+        ),
+        yaxis=dict(
+            gridcolor="#262536",
+            zerolinecolor="#383747",
+            showline=True,
+            linecolor="#383747"
+        ),
+        hoverlabel=dict(
+            bgcolor="#1f1f28",
+            bordercolor="rgba(196,192,255,0.2)",
+            font_family="Plus Jakarta Sans, sans-serif"
+        ),
+        margin=dict(t=40, b=40, l=40, r=40)
+    )
 
 
 def kpi_card(label: str, value: str, delta: str = "", colour: str = "") -> str:
