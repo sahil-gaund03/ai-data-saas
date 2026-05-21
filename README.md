@@ -1,191 +1,331 @@
-# 🔮 Stitch — AI Data Intelligence Suite
+<div align="center">
 
-> **Production-grade AI-powered data cleaning, EDA, and analytics SaaS platform.**  
-> Built with Streamlit · Pandas · Scikit-learn · Gemini AI · Plotly
+<img src="https://img.shields.io/badge/version-1.0.0-c4c0ff?style=for-the-badge&labelColor=13121b" alt="version"/>
+<img src="https://img.shields.io/badge/python-3.10+-d0bcff?style=for-the-badge&logo=python&logoColor=white&labelColor=13121b" alt="python"/>
+<img src="https://img.shields.io/badge/streamlit-1.32+-ffb785?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=13121b" alt="streamlit"/>
+<img src="https://img.shields.io/badge/license-MIT-6ee7b7?style=for-the-badge&labelColor=13121b" alt="license"/>
+<img src="https://img.shields.io/badge/status-active-6ee7b7?style=for-the-badge&labelColor=13121b" alt="status"/>
+
+<br/><br/>
+
+```
+███████╗████████╗██╗████████╗ ██████╗██╗  ██╗
+██╔════╝╚══██╔══╝██║╚══██╔══╝██╔════╝██║  ██║
+███████╗   ██║   ██║   ██║   ██║     ███████║
+╚════██║   ██║   ██║   ██║   ██║     ██╔══██║
+███████║   ██║   ██║   ██║   ╚██████╗██║  ██║
+╚══════╝   ╚═╝   ╚═╝   ╚═╝    ╚═════╝╚═╝  ╚═╝
+```
+
+### 🔮 AI-Powered Data Intelligence Platform
+
+**Upload · Clean · Explore · Predict · Export — all in one place.**
+
+[🚀 Live Demo](#) · [📖 Docs](#installation) · [🐛 Issues](https://github.com/sahil-gaund03/ai-data-saas/issues) · [⭐ Star this repo](#)
+
+</div>
 
 ---
 
-## ✨ Features
+## ✨ What is Stitch?
 
-| Feature | Description |
+**Stitch** is a full-stack, session-isolated data science SaaS platform built with Streamlit and Gemini AI. It takes you from raw CSV to ML model, actionable insights, and a polished PDF report — no code required.
+
+> *Privacy-first design: all data lives in your session. Nothing is persisted server-side.*
+
+---
+
+## 🗺️ Platform Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     STITCH AI DATA SUITE                     │
+│                                                             │
+│  📁 Upload  →  🧹 Clean  →  📊 EDA  →  💡 Insights          │
+│                                  ↓                          │
+│              📄 Reports  ←  🤖 AutoML  ←  💬 Chat            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Feature Modules
+
+### 📁 1 · Smart Dataset Upload
+> Drag-and-drop data ingestion with instant schema detection.
+
+- Supports **CSV, XLSX, XLS, JSON** — up to **200 MB**
+- Instant preview table (50-row sample)
+- Automatic data-type inference on load
+- Session-isolated: your data is yours alone
+
+---
+
+### 🧹 2 · Intelligent Data Cleaning
+> Fix messy data in seconds — no pandas expertise required.
+
+| Capability | Detail |
 |---|---|
-| 📂 **Dataset Upload** | CSV, Excel, JSON — drag & drop or file browser |
-| 🧹 **Auto Cleaning** | Missing values, duplicates, dtype conversion, text cleaning |
-| 📊 **EDA Dashboard** | Histograms, box plots, correlation heatmap, scatter, pie/bar |
-| 💡 **AI Insights** | Gemini-powered business insights from schema + stats |
-| 💬 **Chat with Data** | Natural language queries → Pandas operations + AI narration |
-| 🤖 **AutoML** | Auto model selection, cross-validation, feature importance |
-| 🔒 **PII Detection** | Scan for emails, phones, Aadhaar, PAN, SSN, credit cards |
-| 📄 **PDF Reports** | Downloadable cleaning + analytics reports via ReportLab |
-| ⬇️ **Export** | Download cleaned dataset as CSV or Excel |
+| 🗑️ **Drop high-null columns** | Auto-drops columns with >60% missing values |
+| 🔁 **Duplicate removal** | Exact-row deduplication with count reporting |
+| 🩹 **Smart fill strategies** | Numeric → median · Categorical → mode · Datetime → ffill |
+| 📐 **Type inference** | Coerces strings to numeric/datetime where safe |
+| 📈 **Outlier detection** | IQR-based fencing (1.5× multiplier, configurable) |
+| 📏 **Normalization** | Min-max scaling or Z-score standardization |
+| 🔤 **Text cleaning** | Strip whitespace, lowercase, trim special characters |
+| 📋 **Audit log** | Every change logged — reproducible pipeline |
 
 ---
 
-## 🏗️ Architecture
+### 📊 3 · Analytics Dashboard (EDA)
+> Interactive, Plotly-powered charts — dark-themed and publication-ready.
 
-```
-ai_data_saas/
-├── app.py                  ← Streamlit entrypoint & routing
-├── requirements.txt
-├── .env.example
-│
-├── src/
-│   ├── config.py           ← Global constants & colour tokens
-│   ├── security.py         ← PII detection, session isolation, API key loading
-│   ├── utils.py            ← Shared helpers, CSS injection, KPI cards
-│   ├── upload.py           ← File ingestion (CSV/XLSX/JSON)
-│   ├── cleaner.py          ← Data cleaning engine (Pandas only)
-│   ├── eda.py              ← EDA charts (Plotly)
-│   ├── llm_engine.py       ← Gemini API integration
-│   ├── insights.py         ← AI insights page
-│   ├── chatbot.py          ← Conversational dataset assistant
-│   ├── automl.py           ← AutoML with scikit-learn / XGBoost
-│   └── report_generator.py ← PDF report generation (ReportLab)
-│
-├── data/                   ← (Optional) sample datasets
-├── outputs/                ← Generated output files
-└── reports/                ← Generated PDF reports
-```
-
-### Key architectural principle
-
-> **LLMs are used ONLY for reasoning and language generation.**  
-> All data processing (cleaning, statistics, ML training) is done with **Pandas / NumPy / Scikit-learn**.  
-> The LLM never sees raw data — only schema + aggregated statistics + ≤ 5 masked sample rows.
+- **Histograms** — distribution for any numeric column, configurable bins
+- **Box plots** — outlier visualisation across multiple columns
+- **Correlation heatmap** — full Pearson matrix, colour-coded
+- **Missing value chart** — column-level null percentage bar chart
+- **Scatter plots** — bivariate numeric exploration with trend overlay
+- **Pie / bar charts** — categorical frequency breakdown
+- **Skewness & kurtosis table** — distributional shape at a glance
 
 ---
 
-## 🚀 Local Setup
+### 💡 4 · AI Insights (Gemini-Powered)
+> Turn statistics into business language — powered by `gemini-2.5-flash`.
 
-### 1. Clone / download
-
-```bash
-git clone https://github.com/yourusername/stitch-ai-data-suite.git
-cd stitch-ai-data-suite
+```
+┌──────────────────────────────────────────────────────┐
+│  Tab 1: 💡 Dataset Insights                          │
+│  Tab 2: 🔧 Preprocessing Guide                       │
+│  Tab 3: 🔒 PII Audit                                 │
+└──────────────────────────────────────────────────────┘
 ```
 
-### 2. Create virtual environment
+- **Dataset overview insights** — Gemini reads your schema + stats and writes a business-ready summary
+- **Cleaning recommendations** — AI suggests which columns to fix and why
+- **Trend analysis** — pattern recognition across numeric features
+- **Anomaly explanations** — flags unusual distributions with natural-language context
+- **PII detection** — auto-identifies columns that may contain personally identifiable information
+- Results cached in session state — no repeated API calls
 
-```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+---
+
+### 💬 5 · Chat with Dataset
+> Ask questions about your data in plain English.
+
+**Two-layer architecture:**
+
+```
+User Question
+     │
+     ▼
+┌─────────────────────────┐
+│  Pandas Resolver        │  ← Fast, free, no LLM
+│  (pattern-matched ops)  │
+└────────────┬────────────┘
+             │ (if unresolved)
+             ▼
+┌─────────────────────────┐
+│  Gemini LLM             │  ← Schema + stats context
+│  (natural language)     │
+└─────────────────────────┘
 ```
 
-### 3. Install dependencies
+**Built-in pandas resolvers (zero-latency):**
+
+- Row/column counts
+- Missing value reports
+- Duplicate detection
+- Column averages, min, max
+- Value distribution queries
+
+**LLM fallback handles everything else.** Conversation history persisted in session.
+
+---
+
+### 🤖 6 · AutoML Workspace
+> Train and compare ML models — no ML expertise required.
+
+**Supported algorithms:**
+
+| Model | Classification | Regression |
+|---|---|---|
+| Random Forest | ✅ | ✅ |
+| Logistic / Linear Regression | ✅ | ✅ |
+| Ridge Regression | — | ✅ |
+| XGBoost *(if installed)* | ✅ | ✅ |
+
+**Pipeline steps:**
+1. 🎯 Auto-detect or manually select target column
+2. 🔍 Infer task type: `classification` vs `regression`
+3. ⚙️ Preprocess: encode categoricals + fill nulls
+4. 🔀 Train/test split (80/20, configurable)
+5. 📊 3-fold cross-validation for robust scoring
+6. 🏆 Model leaderboard with ranked metrics
+7. 📉 Feature importance chart (top 15 features)
+8. 🧠 Optional: Gemini-generated model interpretation
+
+**Classification metrics:** Accuracy · F1-score · Classification report  
+**Regression metrics:** MAE · RMSE · R²
+
+---
+
+### 📄 7 · Reports & Export
+> One-click PDF reports and clean data exports.
+
+**PDF Report contains:**
+- Executive summary (shape, quality score, file name)
+- Cleaning audit log
+- Descriptive statistics table
+- Outlier summary
+- AI insights section *(if Gemini key configured)*
+
+**Data exports:**
+- 📥 Download as **CSV**
+- 📥 Download as **Excel (.xlsx)**
+
+> Raw user data is never embedded — only aggregated statistics appear in reports.
+
+---
+
+## 🛡️ Security & Privacy
+
+| Feature | Detail |
+|---|---|
+| 🔒 **Session isolation** | Per-user `st.session_state` — zero cross-user data leakage |
+| 🕵️ **PII detection** | Heuristic column scanner flags sensitive fields |
+| 🎭 **PII masking** | Mask character configurable (`*` by default) |
+| 🧪 **LLM data minimization** | Only 5 sample rows sent to Gemini (configurable) |
+| 📦 **No persistence** | Session data cleared on browser close |
+
+---
+
+## 🧰 Tech Stack
+
+<div align="center">
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | Streamlit 1.32+ |
+| **Data** | Pandas 2.0 · NumPy 1.26 |
+| **Visualisation** | Plotly 5.20 |
+| **ML** | Scikit-learn 1.4 · XGBoost 2.0 |
+| **AI / LLM** | Google Gemini 2.5 Flash (`google-generativeai`) |
+| **PDF** | ReportLab 4.1 |
+| **Vector Search** | FAISS CPU |
+| **Exports** | openpyxl |
+
+</div>
+
+---
+
+## ⚙️ Installation
+
+### Prerequisites
+- Python 3.10+
+- A [Google Gemini API key](https://aistudio.google.com/app/apikey) *(optional — AI features only)*
+
+### 1 · Clone
+
+```bash
+git clone https://github.com/sahil-gaund03/ai-data-saas.git
+cd ai-data-saas
+```
+
+### 2 · Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure API key
+### 3 · Configure environment
 
 ```bash
-cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+# Create a .env file in the project root
+echo "GEMINI_API_KEY=your_api_key_here" > .env
 ```
 
-Get a free Gemini API key at [aistudio.google.com](https://aistudio.google.com/app/apikey).
+Or add via Streamlit Secrets (`~/.streamlit/secrets.toml`):
 
-### 5. Run
+```toml
+GEMINI_API_KEY = "your_api_key_here"
+```
+
+### 4 · Run
 
 ```bash
 streamlit run app.py
 ```
 
-Open [http://localhost:8501](http://localhost:8501) in your browser.
+Navigate to `http://localhost:8501` 🎉
 
 ---
 
-## 🔑 Gemini API Setup (step-by-step)
+## 📁 Project Structure
 
-1. Go to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-2. Sign in with your Google account
-3. Click **Create API Key**
-4. Copy the key
-5. Open your `.env` file and set:
-   ```
-   GEMINI_API_KEY=AIzaSy...your-key-here
-   ```
-6. Restart the app
-
-> **Note:** AI features are optional. The app works without an API key — only the AI Insights, Chat narration, and AutoML interpretation require Gemini.
-
----
-
-## ☁️ Free Deployment (Streamlit Community Cloud)
-
-### Step 1 — Push to GitHub
-
-```bash
-git init
-git add .
-git commit -m "Initial commit — Stitch AI Data Suite"
-git branch -M main
-git remote add origin https://github.com/yourusername/stitch-ai-data-suite.git
-git push -u origin main
+```
+ai-data-saas/
+├── app.py                  # Streamlit entrypoint — routing + sidebar
+├── requirements.txt
+└── src/
+    ├── config.py           # All constants — thresholds, colours, model params
+    ├── security.py         # Session init + PII detection
+    ├── utils.py            # Shared helpers — KPI cards, CSS injection, formatters
+    ├── llm_engine.py       # Gemini API wrapper — all LLM calls centralised
+    ├── upload.py           # Dataset upload page
+    ├── cleaner.py          # Data cleaning engine
+    ├── eda.py              # EDA charts — Plotly builders
+    ├── insights.py         # AI Insights page
+    ├── chatbot.py          # Chat with Dataset — pandas resolver + LLM fallback
+    ├── automl.py           # AutoML Workspace — model training + evaluation
+    └── report_generator.py # PDF report builder (ReportLab)
 ```
 
-### Step 2 — Deploy on Streamlit Cloud
+---
 
-1. Go to [share.streamlit.io](https://share.streamlit.io)
-2. Sign in with GitHub
-3. Click **New app**
-4. Select your repository and set **Main file** to `app.py`
-5. Click **Deploy**
+## 🗺️ Roadmap
 
-### Step 3 — Add secrets
-
-In Streamlit Cloud:
-- Go to your app → **Settings** → **Secrets**
-- Add:
-  ```toml
-  GEMINI_API_KEY = "AIzaSy...your-key-here"
-  ```
+- [ ] 🌐 Multi-file join / merge support
+- [ ] 🕒 Time-series forecasting module
+- [ ] 🗃️ PostgreSQL / BigQuery connector
+- [ ] 📡 Real-time streaming data support
+- [ ] 🧩 Plugin API for custom chart types
+- [ ] 🔐 OAuth-based user authentication
 
 ---
 
-## 🔒 Security & Privacy Design
+## 🤝 Contributing
 
-| Concern | How Stitch Handles It |
-|---|---|
-| Session isolation | Each browser session gets a unique UUID; no shared memory |
-| API key safety | Loaded via `.env` locally, Streamlit Secrets in production |
-| LLM data exposure | Only schema + stats + ≤ 5 masked rows sent to Gemini |
-| PII detection | Regex-based scan for email, phone, SSN, Aadhaar, PAN, CC |
-| Temporary files | `tempfile` module; deleted after processing |
-| Error messages | Generic user-facing errors; stack traces only in server logs |
+Pull requests are welcome!
 
----
+```bash
+# 1. Fork the repo
+# 2. Create your feature branch
+git checkout -b feature/amazing-feature
 
-## 🛠️ Troubleshooting
+# 3. Commit your changes
+git commit -m "feat: add amazing feature"
 
-| Problem | Solution |
-|---|---|
-| `ModuleNotFoundError` | Run `pip install -r requirements.txt` |
-| AI features offline | Check `GEMINI_API_KEY` in `.env` or Streamlit Secrets |
-| Excel not parsing | Ensure `openpyxl` is installed |
-| PDF not generating | Ensure `reportlab` is installed |
-| XGBoost not available | `pip install xgboost` (optional; falls back to RF + LR) |
-| Large file slow | Reduce dataset size or increase Streamlit file upload limit |
-
----
-
-## 🔭 Future Improvements
-
-- [ ] Multi-file join / merge support
-- [ ] Time-series decomposition (trend, seasonality)
-- [ ] FAISS vector search for semantic data exploration
-- [ ] SQLite dataset versioning
-- [ ] Scheduled report emails
-- [ ] Role-based access control for team plans
-- [ ] Plugin system for custom cleaning rules
+# 4. Push and open a PR
+git push origin feature/amazing-feature
+```
 
 ---
 
 ## 📄 License
 
-MIT License — free for personal and commercial use.
+Distributed under the **MIT License**. See `LICENSE` for details.
 
 ---
 
-*Built with ❤️ using Streamlit, Gemini AI, and the Python data stack.*
+<div align="center">
+
+Built with 🔮 by **Sahil Gaund**
+
+[![GitHub](https://img.shields.io/badge/GitHub-sahil--gaund03-c4c0ff?style=flat-square&logo=github&labelColor=13121b)](https://github.com/sahil-gaund03)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-sahilgaund03-d0bcff?style=flat-square&logo=linkedin&labelColor=13121b)](https://linkedin.com/in/sahilgaund03)
+[![Portfolio](https://img.shields.io/badge/Portfolio-sahilgaund0310.netlify.app-ffb785?style=flat-square&labelColor=13121b)](https://sahilgaund0310.netlify.app)
+
+*If this project helped you, please consider giving it a ⭐*
+
+</div>
