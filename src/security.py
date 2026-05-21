@@ -20,6 +20,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -105,26 +106,48 @@ def safe_llm_context(df: pd.DataFrame, max_rows: int = 5) -> dict:
     """
     Build a minimal, privacy-safe context dict to send to the LLM.
     NEVER includes full data. Only schema + stats + tiny sample.
+    Converts all types to native Python structures to guarantee JSON serializability.
     """
     pii_cols = detect_pii_columns(df)
     safe_df = mask_pii_dataframe(df, pii_cols) if pii_cols else df
 
+    # Convert null counts safely into standard Python native integers
+    null_counts_dict = {str(k): int(v) for k, v in df.isnull().sum().to_dict().items()}
+
+    # Clean and sanitize sample rows to completely bypass serialization crashes
+    raw_samples = safe_df.head(max_rows).to_dict(orient="records")
+    clean_samples = []
+    for row in raw_samples:
+        clean_row = {}
+        for k, v in row.items():
+            if pd.isnull(v):
+                clean_row[str(k)] = None
+            elif isinstance(v, (np.integer, np.int64, np.int32)):
+                clean_row[str(k)] = int(v)
+            elif isinstance(v, (np.floating, np.float64, np.float32)):
+                clean_row[str(k)] = float(v) if not np.isnan(v) else None
+            elif hasattr(v, 'isoformat'):
+                clean_row[str(k)] = v.isoformat()
+            else:
+                clean_row[str(k)] = str(v)
+        clean_samples.append(clean_row)
+
     context = {
         "shape": {"rows": int(df.shape[0]), "columns": int(df.shape[1])},
         "columns": list(df.columns),
-        "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()},
-        "null_counts": df.isnull().sum().to_dict(),
+        "dtypes": {str(col): str(dtype) for col, dtype in df.dtypes.items()},
+        "null_counts": null_counts_dict,
         "numeric_stats": {},
-        "sample_rows": safe_df.head(max_rows).to_dict(orient="records"),
+        "sample_rows": clean_samples,
         "pii_detected": list(pii_cols.keys()),
     }
 
-    # Numeric summary — safe aggregates only
+    # Clean description summary statistics
     num_df = df.select_dtypes(include="number")
     if not num_df.empty:
         desc = num_df.describe().to_dict()
         context["numeric_stats"] = {
-            col: {k: round(v, 4) for k, v in stats.items()}
+            str(col): {str(metric): float(val) if not np.isnan(val) else None for metric, val in stats.items()}
             for col, stats in desc.items()
         }
 
@@ -165,7 +188,6 @@ def load_api_key() -> Optional[str]:
       2. .env / environment variable (local dev)
     Returns None if not configured.
     """
-    # Streamlit Secrets (Streamlit Cloud deployment)
     try:
         key = st.secrets.get("GEMINI_API_KEY")
         if key:
@@ -173,7 +195,6 @@ def load_api_key() -> Optional[str]:
     except Exception:
         pass
 
-    # .env / system environment (local development)
     try:
         from dotenv import load_dotenv
         load_dotenv()
