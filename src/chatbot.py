@@ -155,7 +155,7 @@ def render_chat_page() -> None:
         "Ask anything about your data in plain English. Powered by Gemini + Pandas.",
     )
 
-    # Explicitly check for None to prevent ambiguous DataFrame truth value evaluation
+    # FIX: Explicitly check for None to prevent ambiguous DataFrame truth value evaluation
     df = st.session_state.get("df_cleaned")
     if df is None:
         df = st.session_state.get("df_raw")
@@ -179,9 +179,12 @@ def render_chat_page() -> None:
         "How many duplicate rows?",
         "What is the average of each numeric column?",
     ]
-    cols = st.columns(len(suggestions))
-    for i, (col, sug) in enumerate(zip(cols, suggestions)):
-        if col.button(sug, key=f"sug_{i}", use_container_width=True):
+    
+    # UI FIX: Smart grid layout for suggestions (prevents layout crushing on narrow displays)
+    grid_cols = st.columns(2)
+    for idx, sug in enumerate(suggestions):
+        target_col = grid_cols[0] if idx % 2 == 0 else grid_cols[1]
+        if target_col.button(f"🔍 {sug}", key=f"sug_{idx}", use_container_width=True):
             st.session_state["chat_input_prefill"] = sug
             st.rerun()
 
@@ -217,17 +220,17 @@ def render_chat_page() -> None:
         history.append({"question": question, "answer": answer_text, "chart": chart})
         st.session_state.chat_history = history
 
-    # Render conversation
+    # Render conversation using custom token bubbles defined in global CSS
     for turn in history:
-        with st.chat_message("user"):
-            st.markdown(turn["question"])
-        with st.chat_message("assistant"):
-            st.markdown(turn["answer"])
-            if turn.get("chart"):
-                st.plotly_chart(turn["chart"], use_container_width=True)
+        st.markdown(f'<div class="chat-user"><b>👤 User Question:</b><br>{turn["question"]}</div>', unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(f'<div class="chat-ai"><div class="ai-badge">🤖 Stitch Core Engine</div><br>{turn["answer"]}</div>', unsafe_allow_html=True)
+        if turn.get("chart"):
+            st.plotly_chart(turn["chart"], use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
 
     # Clear button
     if history:
-        if st.button("🗑️ Clear Conversation", key="clear_chat"):
+        if st.button("🗑️ Clear Conversation", key="clear_chat", use_container_width=True):
             st.session_state.chat_history = []
             st.rerun()
