@@ -1,5 +1,6 @@
 """
 utils.py — Shared helper utilities used across all modules.
+Upgraded with modern glassmorphism, responsive metrics grids, and premium micro-UI components.
 """
 
 import io
@@ -79,7 +80,6 @@ def data_quality_score(df: pd.DataFrame) -> float:
     Return a quality score 0–100 based on:
       • % complete values (no nulls)
       • % duplicate rows
-      • % columns with correct dtypes inferred
     """
     total_cells = df.shape[0] * df.shape[1]
     if total_cells == 0:
@@ -126,7 +126,7 @@ def inject_global_css() -> None:
     st.markdown("""
 <style>
 /* ── Google Fonts ───────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ── CSS Tokens ─────────────────────────────────────────────── */
 :root {
@@ -145,14 +145,14 @@ def inject_global_css() -> None:
     --outline-var:      #464555;
     --error:            #ffb4ab;
     --success:          #6ee7b7;
-    --glass-bg:         rgba(31, 31, 40, 0.80);
-    --glass-border:     rgba(248, 250, 252, 0.08);
-    --glow-primary:     rgba(196, 192, 255, 0.15);
+    --glass-bg:         rgba(31, 31, 40, 0.75);
+    --glass-border:     rgba(196, 192, 255, 0.08);
+    --glow-primary:     rgba(196, 192, 255, 0.12);
 }
 
 /* ── Base overrides ─────────────────────────────────────────── */
 html, body, [class*="css"] {
-    font-family: 'Geist', sans-serif !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
     background-color: var(--surface) !important;
     color: var(--on-surface) !important;
 }
@@ -163,65 +163,93 @@ html, body, [class*="css"] {
 
 /* ── Sidebar ────────────────────────────────────────────────── */
 section[data-testid="stSidebar"] {
-    background: var(--surface-low) !important;
+    background: linear-gradient(180deg, #16151f 0%, #111016 100%) !important;
     border-right: 1px solid var(--glass-border) !important;
 }
 section[data-testid="stSidebar"] .stRadio label {
     color: var(--on-surface-var) !important;
     font-size: 14px !important;
-    transition: color .2s;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all .2s ease;
 }
 section[data-testid="stSidebar"] .stRadio label:hover {
     color: var(--primary) !important;
+    background: rgba(196, 192, 255, 0.05);
 }
 
 /* ── Glass card container ───────────────────────────────────── */
 .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 1.25rem;
-    padding: 1.5rem;
-    transition: border-color .3s, box-shadow .3s;
+    background: linear-gradient(145deg, rgba(31, 31, 40, 0.8), rgba(22, 21, 31, 0.85));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(196, 192, 255, 0.12);
+    border-radius: 14px;
+    padding: 1.75rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: border-color .3s, box-shadow .3s, transform .2s;
 }
 .glass-card:hover {
-    border-color: rgba(196, 192, 255, 0.25);
-    box-shadow: 0 0 24px var(--glow-primary);
+    border-color: rgba(196, 192, 255, 0.3);
+    box-shadow: 0 12px 40px var(--glow-primary);
+    transform: translateY(-2px);
 }
 
 /* ── KPI metric widget ──────────────────────────────────────── */
 .kpi-card {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 1rem;
-    padding: 1.25rem 1.5rem;
-    text-align: center;
-    transition: border-color .3s;
+    background: linear-gradient(145deg, #1f1f28, #16151f) !important;
+    border: 1px solid rgba(196, 192, 255, 0.15) !important;
+    border-radius: 14px !important;
+    padding: 24px !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    text-align: left;
+    transition: transform 0.2s ease, border-color 0.3s ease;
 }
-.kpi-card:hover { border-color: rgba(196, 192, 255, 0.3); }
-.kpi-value { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; color: var(--primary); }
-.kpi-label { font-size: 0.75rem; color: var(--on-surface-var); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
-.kpi-delta { font-size: 0.8rem; margin-top: 6px; }
+.kpi-card:hover { 
+    border-color: rgba(196, 192, 255, 0.35) !important;
+    transform: translateY(-2px);
+}
+.kpi-value { 
+    font-size: 2.2rem; 
+    font-weight: 700; 
+    letter-spacing: -0.03em; 
+    color: var(--primary); 
+    font-variant-numeric: tabular-nums;
+}
+.kpi-label { 
+    font-size: 0.8rem; 
+    color: var(--outline); 
+    font-weight: 600;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    margin-top: 6px; 
+}
+.kpi-delta { font-size: 0.85rem; margin-top: 6px; font-weight: 500; }
 
 /* ── Section header ─────────────────────────────────────────── */
 .section-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
-    color: var(--outline);
+    letter-spacing: 0.15em;
+    color: var(--tertiary);
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    background: rgba(255, 183, 133, 0.08);
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 0.75rem;
 }
 
 /* ── Page title ─────────────────────────────────────────────── */
 .page-title {
-    font-size: 2.25rem;
-    font-weight: 700;
+    font-size: 2.6rem;
+    font-weight: 800;
     letter-spacing: -0.04em;
-    color: var(--on-surface);
+    color: #ffffff;
     line-height: 1.1;
+    margin-top: 4px;
 }
 .gradient-text {
     background: linear-gradient(90deg, var(--primary), var(--secondary));
@@ -235,68 +263,81 @@ section[data-testid="stSidebar"] .stRadio label:hover {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 3px 12px;
+    padding: 5px 14px;
     border-radius: 9999px;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    margin: 4px;
 }
-.chip-primary   { background: rgba(196,192,255,.15); color: var(--primary); }
-.chip-success   { background: rgba(110,231,183,.15); color: var(--success); }
-.chip-warning   { background: rgba(255,183,133,.15); color: var(--tertiary); }
-.chip-error     { background: rgba(255,180,171,.15); color: var(--error); }
+.chip-primary   { background: rgba(196,192,255,.12) !important; color: var(--primary) !important; border: 1px solid rgba(196,192,255,.25); }
+.chip-success   { background: rgba(110,231,183,.12) !important; color: var(--success) !important; border: 1px solid rgba(110,231,183,.25); }
+.chip-warning   { background: rgba(255,183,133,.12) !important; color: var(--tertiary) !important; border: 1px solid rgba(255,183,133,.25); }
+.chip-error     { background: rgba(255,180,171,.12) !important; color: var(--error) !important; border: 1px solid rgba(255,180,171,.25); }
 
 /* ── AI response container ──────────────────────────────────── */
 .ai-response {
-    background: rgba(135,129,255,.08);
-    border: 1px solid rgba(135,129,255,.25);
-    border-top: 2px solid var(--primary-dim);
-    border-radius: 1rem;
-    padding: 1.25rem 1.5rem;
-    font-size: 0.9rem;
+    background: linear-gradient(135deg, rgba(31, 31, 40, 0.7) 0%, rgba(19, 18, 27, 0.9) 100%) !important;
+    border-left: 4px solid var(--primary) !important;
+    border-top: 1px solid rgba(196, 192, 255, 0.1);
+    border-right: 1px solid rgba(196, 192, 255, 0.1);
+    border-bottom: 1px solid rgba(196, 192, 255, 0.1);
+    border-radius: 0 12px 12px 0;
+    padding: 22px !important;
+    margin: 18px 0 !important;
+    color: var(--on-surface) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important;
     line-height: 1.7;
 }
 .ai-badge {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    color: var(--primary);
+    display: inline-block;
+    background: rgba(196, 192, 255, 0.15) !important;
+    color: var(--primary) !important;
+    font-size: 0.7rem;
+    font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(196, 192, 255, 0.2);
 }
 
 /* ── Upload zone ────────────────────────────────────────────── */
 .upload-zone {
-    border: 2px dashed var(--outline-var);
-    border-radius: 1.25rem;
-    padding: 3rem 2rem;
+    border: 2px dashed rgba(196, 192, 255, 0.2) !important;
+    border-radius: 16px;
+    padding: 3.5rem 2rem;
     text-align: center;
-    background: var(--surface-mid);
+    background: #1b1b24;
     transition: border-color .3s, background .3s;
 }
 .upload-zone:hover {
-    border-color: var(--primary);
-    background: rgba(196,192,255,.04);
+    border-color: var(--primary) !important;
+    background: rgba(196, 192, 255, .03);
 }
 
 /* ── Chat bubbles ───────────────────────────────────────────── */
 .chat-user {
-    background: rgba(196,192,255,.12);
-    border: 1px solid rgba(196,192,255,.2);
-    border-radius: 1rem 1rem 0.25rem 1rem;
-    padding: 0.75rem 1rem;
-    margin-left: 2rem;
-    font-size: 0.9rem;
+    background: rgba(196, 192, 255, .1) !important;
+    border: 1px solid rgba(196, 192, 255, .15) !important;
+    border-radius: 12px 12px 4px 12px !important;
+    padding: 1rem 1.25rem !important;
+    margin-left: 3rem;
+    font-size: 0.95rem;
+    color: #ffffff !important;
 }
 .chat-ai {
-    background: rgba(31,31,40,.9);
-    border: 1px solid var(--glass-border);
-    border-radius: 1rem 1rem 1rem 0.25rem;
-    padding: 0.75rem 1rem;
-    margin-right: 2rem;
-    font-size: 0.9rem;
-    border-left: 3px solid var(--primary-dim);
+    background: rgba(27, 27, 36, 0.85) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px 12px 12px 4px !important;
+    padding: 1rem 1.25rem !important;
+    margin-right: 3rem;
+    font-size: 0.95rem;
+    border-left: 3px solid var(--primary) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
@@ -310,31 +351,43 @@ section[data-testid="stSidebar"] .stRadio label:hover {
 .stMultiSelect > div > div,
 .stTextInput > div > div input {
     background: var(--surface-mid) !important;
-    border: 1px solid var(--outline-var) !important;
-    border-radius: 0.5rem !important;
+    border: 1px solid rgba(196, 192, 255, 0.15) !important;
+    border-radius: 8px !important;
     color: var(--on-surface) !important;
+    padding: 2px 4px;
+}
+.stSelectbox > div > div:hover, .stMultiSelect > div > div:hover {
+    border-color: var(--primary) !important;
 }
 .stButton > button {
-    background: linear-gradient(135deg, #8781ff, #571bc1) !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 0.75rem !important;
+    background: linear-gradient(135deg, #1f1f28 0%, #13121b 100%) !important;
+    color: var(--on-surface) !important;
+    border: 1px solid rgba(196, 192, 255, 0.3) !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
     font-weight: 600 !important;
-    font-family: 'Geist', sans-serif !important;
-    transition: opacity .2s, box-shadow .2s !important;
+    transition: all 0.25s ease !important;
 }
 .stButton > button:hover {
-    opacity: .9 !important;
-    box-shadow: 0 0 16px rgba(135,129,255,.35) !important;
+    border-color: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 16px rgba(196, 192, 255, 0.2) !important;
+    transform: translateY(-1px);
 }
-.stDataFrame { border-radius: 0.75rem; overflow: hidden; }
+.stDataFrame { border-radius: 10px; overflow: hidden; border: 1px solid var(--glass-border); }
 div[data-testid="stMetricValue"] { color: var(--primary) !important; font-weight: 700; }
+div[data-testid="stExpander"] {
+    background-color: #1f1f28 !important;
+    border: 1px solid rgba(196, 192, 255, 0.1) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
 
 def kpi_card(label: str, value: str, delta: str = "", colour: str = "") -> str:
-    """Return HTML for a KPI metric card."""
+    """Return HTML for an upgraded premium KPI metric card."""
     delta_html = ""
     if delta:
         delta_colour = COLORS["success"] if not delta.startswith("-") else COLORS["error"]
@@ -351,12 +404,13 @@ def kpi_card(label: str, value: str, delta: str = "", colour: str = "") -> str:
 
 
 def section_header(label: str, title: str, subtitle: str = "") -> None:
-    """Render a consistent page-section header."""
-    subtitle_html = f'<p style="color:var(--on-surface-var);font-size:.95rem;margin-top:.4rem">{subtitle}</p>' if subtitle else ""
+    """Render a consistent premium page-section header structure."""
+    subtitle_html = f'<p style="color:var(--on-surface-var); font-size:1.05rem; margin-top:0.5rem; line-height:1.5;">{subtitle}</p>' if subtitle else ""
     st.markdown(f"""
-<div style="margin-bottom:1.5rem">
+<div style="margin-bottom: 2rem; mt: 0.5rem;">
     <div class="section-label">{label}</div>
     <div class="page-title">{title}</div>
     {subtitle_html}
 </div>
+<hr style="border-color: rgba(196, 192, 255, 0.12); margin-bottom: 2rem; margin-top: 1.5rem;">
 """, unsafe_allow_html=True)
