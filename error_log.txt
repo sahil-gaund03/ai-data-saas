@@ -1,0 +1,81 @@
+2026-05-09 19:17:43.827 Uvicorn server started on 0.0.0.0:8501
+2026-05-09 19:18:23.664 Uncaught app execution
+Traceback (most recent call last):
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ai_data_saas\app.py", line 30, in <module>
+    from src.automl import render_automl_page
+  File "D:\ai_data_saas\src\automl.py", line 23, in <module>
+    from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\__init__.py", line 70, in <module>
+    from sklearn.base import clone  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\base.py", line 19, in <module>
+    from sklearn.utils._metadata_requests import _MetadataRequester, _routing_enabled
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\__init__.py", line 9, in <module>
+    from sklearn.utils._chunking import gen_batches, gen_even_slices
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\_chunking.py", line 11, in <module>
+    from sklearn.utils._param_validation import Interval, validate_params
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\_param_validation.py", line 17, in <module>
+    from sklearn.utils.validation import _is_arraylike_not_scalar
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\validation.py", line 14, in <module>
+    import joblib
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\__init__.py", line 114, in <module>
+    from ._cloudpickle_wrapper import wrap_non_picklable_objects
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\_cloudpickle_wrapper.py", line 14, in <module>
+    from .externals.loky import wrap_non_picklable_objects
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\externals\loky\__init__.py", line 19, in <module>
+    from .backend.context import cpu_count
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\externals\loky\backend\__init__.py", line 4, in <module>
+    from .context import get_context
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\externals\loky\backend\context.py", line 21, in <module>
+    from concurrent.futures.process import _MAX_WINDOWS_WORKERS
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\concurrent\futures\process.py", line 112, in <module>
+    threading._register_atexit(_python_exit)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1546, in _register_atexit
+    raise RuntimeError("can't register atexit after shutdown")
+RuntimeError: can't register atexit after shutdown
+2026-05-09 19:18:23.682 Uncaught app execution
+Traceback (most recent call last):
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ai_data_saas\app.py", line 30, in <module>
+    from src.automl import render_automl_page
+  File "D:\ai_data_saas\src\automl.py", line 23, in <module>
+    from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\__init__.py", line 70, in <module>
+    from sklearn.base import clone  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\base.py", line 20, in <module>
+    from sklearn.utils._missing import is_pandas_na, is_scalar_nan
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\__init__.py", line 9, in <module>
+    from sklearn.utils._chunking import gen_batches, gen_even_slices
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\_chunking.py", line 11, in <module>
+    from sklearn.utils._param_validation import Interval, validate_params
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\_param_validation.py", line 17, in <module>
+    from sklearn.utils.validation import _is_arraylike_not_scalar
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\validation.py", line 14, in <module>
+    import joblib
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\__init__.py", line 114, in <module>
+    from ._cloudpickle_wrapper import wrap_non_picklable_objects
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\_cloudpickle_wrapper.py", line 14, in <module>
+    from .externals.loky import wrap_non_picklable_objects
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\externals\loky\__init__.py", line 19, in <module>
+    from .backend.context import cpu_count
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\externals\loky\backend\__init__.py", line 4, in <module>
+    from .context import get_context
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\site-packages\joblib\externals\loky\backend\context.py", line 21, in <module>
+    from concurrent.futures.process import _MAX_WINDOWS_WORKERS
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\concurrent\futures\process.py", line 112, in <module>
+    threading._register_atexit(_python_exit)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\sahil\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1546, in _register_atexit
+    raise RuntimeError("can't register atexit after shutdown")
+RuntimeError: can't register atexit after shutdown
