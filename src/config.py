@@ -21,7 +21,8 @@ IQR_OUTLIER_MULTIPLIER = 1.5          # standard IQR fence multiplier
 HIGH_CARDINALITY_THRESHOLD = 50       # unique values above this → not auto-encoded
 
 # ── LLM / Gemini ─────────────────────────────────────────────────────────────
-GEMINI_MODEL = "gemini-1.5-flash"     # fast, cheap model for insight generation
+# ── LLM / Gemini ─────────────────────────────────────────────────────────────
+GEMINI_MODEL = "gemini-2.5-flash"     # Updated to stable production model
 LLM_MAX_SAMPLE_ROWS = 5              # rows sent to LLM (privacy guard)
 LLM_MAX_OUTPUT_TOKENS = 1024
 
